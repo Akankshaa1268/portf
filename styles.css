@@ -5,12 +5,51 @@
     box-sizing: border-box;
 }
 
+
+.tech-pill {
+  background: #222;
+  color: #eee;
+  padding: 6px 15px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  margin-right: 7px;
+  margin-bottom: 7px;
+}
+
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: #000;
     color: #fff;
     line-height: 1.6;
     overflow-x: hidden;
+}
+.intro-row {
+  display: flex;
+  align-items: center; /* vertical alignment */
+  justify-content: space-between;
+  gap: 48px; /* more space for balance */
+}
+
+.avatar-img {
+  width: 200px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.profile-img {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
 }
 
 .container {
@@ -21,8 +60,12 @@ body {
 
 /* Header */
 .header {
-    padding: 60px 0 40px;
+   padding: 38px 0 12px;
 }
+#contact .section {
+    text-align: center;
+}
+
 
 .avatar {
     width: 80px;
@@ -70,10 +113,23 @@ body {
 .nav-links a.active {
     color: #fff;
 }
+body.light .section,
+body.light .section * {
+  color: #222 !important;
+}
+
+body.light .experience-role {
+  color: #686868 !important;
+}
+
+body.light .experience-dates {
+  color: #999 !important;
+}
+
 
 /* Sections */
 .section {
-    margin-bottom: 80px;
+    margin-bottom: 60px;
     scroll-margin-top: 20px;
 }
 
