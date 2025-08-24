@@ -9,6 +9,10 @@
 
 
     <link rel="stylesheet" href="styles.css">
+    <section id="spotifyNowPlayingSection" style="margin-top: 28px; padding-left: 20px;">
+  <div id="spotifyNowPlaying" class="spotify-profile-widget"></div>
+</section>
+
 </head>
 <body>
     <div class="container">
@@ -22,10 +26,16 @@
     </div>
     <div class="avatar-img">
       <img src="akanksha.jpg" alt="Akanksha Profile" class="profile-img">
+<div id="spotifyNowPlaying" class="spotify-profile-widget"></div>
 
     </div>
   </div>
 </header>
+<!-- Spotify Now Playing Widget (above About section) -->
+<section id="spotifyNowPlayingSection" style="margin-top: 30px;">
+  <div id="spotifyNowPlaying" class="spotify-profile-widget"></div>
+</section>
+
 
         <!-- About Section (immediately below introduction) -->
         <section id="about" class="section">
@@ -44,6 +54,102 @@
                 Resume
             </a>
         </section>
+<!-- Place this directly below Resume button and above Work Experience section -->
+<div style="display: flex; justify-content: left; margin: 6px 0 6px 100;">
+  <button id="openSpotify">I'm listening to</button>
+</div>
+<!-- Main Spotify Modal -->
+<div id="spotifyModal" aria-modal="true" role="dialog" aria-labelledby="trackName" aria-describedby="artistName">
+  <img id="albumArt" src="" alt="Album art" />
+  <div id="trackName"></div>
+  <div id="artistName"></div>
+  <div id="timeContainer">
+    <span id="currentTime">0:00</span>
+    <span id="totalTime">0:00</span>
+  </div>
+  <input id="progressBar" type="range" min="0" max="0" value="0" disabled />
+  <div id="emptyState" style="display:none; margin-top: -18px; color: #888;">
+    Hey, I’m not listening to anything right now, probably have classes or sleeping.
+  </div>
+  <button id="closeSpotify">Close</button>
+</div>
+
+<script>
+function msToMinSec(ms) {
+  const min = Math.floor(ms / 60000);
+  const sec = Math.floor((ms % 60000) / 1000);
+  return `${min}:${sec.toString().padStart(2, '0')}`;
+}
+
+async function fetchCurrentTrack() {
+  try {
+    const res = await fetch('http://localhost:8888/current-track');
+    const data = await res.json();
+
+    const albumArt = document.getElementById('albumArt');
+    const trackName = document.getElementById('trackName');
+    const artistName = document.getElementById('artistName');
+    const currentTime = document.getElementById('currentTime');
+    const totalTime = document.getElementById('totalTime');
+    const progressBar = document.getElementById('progressBar');
+    const emptyState = document.getElementById('emptyState');
+
+    if (!data.playing) {
+      albumArt.style.display = 'none';
+      trackName.style.display = 'none';
+      artistName.style.display = 'none';
+      currentTime.textContent = '';
+      totalTime.textContent = '';
+      progressBar.style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+
+    albumArt.style.display = 'block';
+    trackName.style.display = 'block';
+    artistName.style.display = 'block';
+    progressBar.style.display = 'block';
+    emptyState.style.display = 'none';
+
+    const item = data.item;
+    const progress = data.progress_ms;
+    const duration = item.duration_ms;
+
+    albumArt.src = item.album.images[0].url;
+    trackName.textContent = item.name;
+    artistName.textContent = item.artists.map(a => a.name).join(', ');
+
+    currentTime.textContent = msToMinSec(progress);
+    totalTime.textContent = msToMinSec(duration);
+
+    progressBar.max = duration;
+    progressBar.value = progress;
+    progressBar.disabled = false;
+
+  } catch (e) {
+    console.error(e);
+    // Show empty state on error as well
+    document.getElementById('albumArt').style.display = 'none';
+    document.getElementById('trackName').style.display = 'none';
+    document.getElementById('artistName').style.display = 'none';
+    document.getElementById('currentTime').textContent = '';
+    document.getElementById('totalTime').textContent = '';
+    document.getElementById('progressBar').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+  }
+}
+
+document.getElementById('openSpotify').addEventListener('click', () => {
+  fetchCurrentTrack();
+  document.getElementById('spotifyModal').style.display = 'block';
+});
+
+document.getElementById('closeSpotify').addEventListener('click', () => {
+  document.getElementById('spotifyModal').style.display = 'none';
+});
+
+</script>
+
 
         <!-- Work Experience -->
 <section id="experience" class="section" style="max-width:800px;margin:0 auto;">
@@ -242,6 +348,8 @@
   </button>
 </footer>
 
-    <script src="script.js"></script>
+
+ 
+
 </body>
 </html>

@@ -94,3 +94,40 @@ sections.forEach(section => {
     section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(section);
 });
+async function loadSpotifyNowPlaying() {
+  try {
+    const res = await fetch('http://localhost:8888/current-track');
+    const data = await res.json();
+
+    const profilePicUrl = "akanksha.jpg"; // path to your profile image
+
+    const widget = document.getElementById('spotifyNowPlaying');
+
+    if (!data.playing) {
+      widget.innerHTML = `
+        <img src="${profilePicUrl}" alt="Spotify avatar" class="spotify-avatar" />
+        <div class="spotify-track-details">
+          <span class="profile-name">Akanksha</span>
+          <span class="track-info" style="color:#b3b3b3;font-style:italic;">Not listening right now! Probably working or studying.</span>
+        </div>
+      `;
+      return;
+    }
+
+    const item = data.item;
+    const artistNames = item.artists.map(a => a.name).join(' • ');
+
+    widget.innerHTML = `
+      <img src="${profilePicUrl}" alt="Spotify avatar" class="spotify-avatar" />
+      <div class="spotify-track-details">
+        <span class="profile-name">Akanksha</span>
+        <span class="track-info"><b>${item.name}</b> &ndash; ${artistNames}</span>
+        <span class="album-info"><span class="spotify-icon">⏺️</span>${item.album.name}</span>
+      </div>
+    `;
+  } catch (e) {
+    document.getElementById('spotifyNowPlaying').innerHTML =
+      `<span style="color:#b3b3b3;">Cannot fetch Spotify status right now.</span>`;
+  }
+}
+window.addEventListener('DOMContentLoaded', loadSpotifyNowPlaying);
