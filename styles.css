@@ -60,7 +60,7 @@ body {
 
 /* Header */
 .header {
-   padding: 38px 0 12px;
+   padding: 12px 0 12px;
 }
 #contact .section {
     text-align: center;
@@ -91,7 +91,7 @@ body {
 .intro .subtitle {
     font-size: 20px;
     color: #888;
-    margin-bottom: 32px;
+    margin-bottom: 0px;
     font-weight: 400;
 }
 
